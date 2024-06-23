@@ -19,7 +19,7 @@ const Index = () => {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `https://newsapi.org/v2/everything?q=${searchTerm}&from=2024-06-22&sortBy=popularity&pageSize=100&apiKey=${API_KEY}`
+        `https://newsapi.org/v2/everything?q=${searchTerm}&from=2024-06-20&sortBy=popularity&pageSize=100&apiKey=${API_KEY}`
       );
       localStorage.setItem("data", JSON.stringify(response.data));
       const articles = response.data.articles.map((article) => ({
