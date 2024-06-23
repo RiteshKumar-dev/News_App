@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { CircularProgress } from "@material-ui/core";
+import { CircularProgress } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 
 const API_KEY = import.meta.env.VITE_REACT_APP_API_KEY;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext, Suspense } from "react";
 import axios from "axios";
-import { CircularProgress } from "@material-ui/core";
+import { CircularProgress } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
 import { ThemeContext } from "../Context/ThemeContext";
