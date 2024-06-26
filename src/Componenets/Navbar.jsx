@@ -1,15 +1,33 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { Link, useLocation } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
 import App_Logo from "../assets/App_Logo.png";
 import { ThemeContext } from "../Context/ThemeContext";
 
 const Navbar = () => {
+  const [isClick, setIsClick] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { userData, theme, setUserData } = useContext(ThemeContext);
+  const { userData, theme } = useContext(ThemeContext);
+  const location = useLocation();
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const handleTextClr = (prm) => {
+    setIsClick(prm);
+  };
+
+  const linkClass = (path) => {
+    if (theme === "dark") {
+      return isClick === path
+        ? "font-semibold text-blue-500 mx-2 my-1 md:my-0"
+        : "font-semibold text-white mx-2 my-1 md:my-0";
+    } else {
+      return isClick === path
+        ? "font-semibold text-blue-500 mx-2 my-1 md:my-0"
+        : "font-semibold text-gray-500 mx-2 my-1 md:my-0";
+    }
   };
 
   return (
@@ -35,33 +53,31 @@ const Navbar = () => {
         <div className="hidden md:flex flex-col md:flex-row items-center justify-center w-full md:w-auto mb-2 md:mb-0">
           <Link
             to={"/ipl"}
-            className={
-              theme === "dark"
-                ? "font-semibold text-white mx-2 my-1 md:my-0"
-                : "font-semibold text-gray-500 mx-2 my-1 md:my-0"
-            }
+            className={linkClass("/ipl")}
+            onClick={() => handleTextClr("/ipl")}
           >
             IPL
           </Link>
           <Link
             to={"/finance"}
-            className={
-              theme === "dark"
-                ? "font-semibold text-white mx-2 my-1 md:my-0"
-                : "font-semibold text-gray-500 mx-2 my-1 md:my-0"
-            }
+            className={linkClass("/finance")}
+            onClick={() => handleTextClr("/finance")}
           >
             Finance
           </Link>
           <Link
             to={"/politics"}
-            className={
-              theme === "dark"
-                ? "font-semibold text-white mx-2 my-1 md:my-0"
-                : "font-semibold text-gray-500 mx-2 my-1 md:my-0"
-            }
+            className={linkClass("/politics")}
+            onClick={() => handleTextClr("/politics")}
           >
             Politics
+          </Link>
+          <Link
+            to={"/fav"}
+            className={linkClass("/fav")}
+            onClick={() => handleTextClr("/fav")}
+          >
+            Interesting
           </Link>
         </div>
 
@@ -109,7 +125,9 @@ const Navbar = () => {
                 className="bg-gray-500 text-white h-10 w-10 rounded-full border-2 border-gray-300 shadow-md"
               />
             </Link>
-            <ThemeToggle />
+            <div className="hidden sm:flex">
+              <ThemeToggle />
+            </div>
             <button
               onClick={toggleMobileMenu}
               className="ml-4 text-gray-500 focus:outline-none"
@@ -148,31 +166,22 @@ const Navbar = () => {
         >
           <Link
             to={"/ipl"}
-            className={
-              theme === "dark"
-                ? "font-semibold text-white mx-2 my-1 md:my-0"
-                : "font-semibold text-gray-500 mx-2 my-1 md:my-0"
-            }
+            className={linkClass("/ipl")}
+            onClick={() => handleTextClr("/ipl")}
           >
             IPL
           </Link>
           <Link
             to={"/finance"}
-            className={
-              theme === "dark"
-                ? "font-semibold text-white mx-2 my-1 md:my-0"
-                : "font-semibold text-gray-500 mx-2 my-1 md:my-0"
-            }
+            className={linkClass("/finance")}
+            onClick={() => handleTextClr("/finance")}
           >
             Finance
           </Link>
           <Link
             to={"/politics"}
-            className={
-              theme === "dark"
-                ? "font-semibold text-white mx-2 my-1 md:my-0"
-                : "font-semibold text-gray-500 mx-2 my-1 md:my-0"
-            }
+            className={linkClass("/politics")}
+            onClick={() => handleTextClr("/politics")}
           >
             Politics
           </Link>

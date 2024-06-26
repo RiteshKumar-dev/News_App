@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ThemeContext } from "../Context/ThemeContext";
 import { toast } from "react-toastify";
+import BtmNav from "./BtmNav";
 
 const Profile = () => {
   const { userData, setUserData, theme } = useContext(ThemeContext);
@@ -65,6 +66,9 @@ const Profile = () => {
         ) : (
           <p className="text-center text-gray-600">No user data available.</p>
         )}
+      </div>
+      <div className="fixed bottom-4 right-4">
+        <BtmNav />
       </div>
     </div>
   );

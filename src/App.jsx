@@ -9,6 +9,8 @@ import Articles from "./Componenets/Articles";
 import SignUp from "./Componenets/SignUp";
 import Profile from "./Componenets/Profile";
 import NotFound_404 from "./Componenets/NotFound_404 ";
+import FeedBack from "./Componenets/FeedBack";
+import FavNews from "./Componenets/FavNews";
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
           <Route path="/articles/:index" element={<Articles />} />
           <Route path="/auth" element={<SignUp />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/contact" element={<FeedBack />} />
+          <Route path="/fav" element={<FavNews />} />
           <Route path="*" element={<NotFound_404 />} />
         </Route>
       </Routes>

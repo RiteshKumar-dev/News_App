@@ -11,8 +11,8 @@ const ThemeToggle = () => {
       onClick={toggleTheme}
       className="p-2 rounded-full focus:outline-none flex items-center justify-center"
       style={{
-        backgroundColor: theme === "light" ? "#333" : "#f8f8f8",
-        color: theme === "light" ? "#f8f8f8" : "#333",
+        // backgroundColor: theme === "light" ? "#333" : "#f8f8f8",
+        color: theme === "light" ? "#444" : "#f8f8f8",
       }}
     >
       {theme === "light" ? <FaMoon size={24} /> : <FaSun size={24} />}

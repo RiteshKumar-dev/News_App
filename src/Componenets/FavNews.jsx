@@ -11,13 +11,13 @@ import BtmNav from "./BtmNav";
 const API_KEY = import.meta.env.VITE_REACT_APP_API_KEY;
 const BASE_URL = import.meta.env.VITE_REACT_APP_FIREBASE_BASE_URL;
 
-const Index = () => {
+const FavNews = () => {
   const [cards, setCards] = useState([]);
   const [allCards, setAllCards] = useState([]); // To store all data from Firebase
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("Interesting");
+  const [searchTerm, setSearchTerm] = useState("Birds");
   const { userData, setUserData, theme } = useContext(ThemeContext);
   const navigate = useNavigate();
 
@@ -27,13 +27,14 @@ const Index = () => {
         `https://newsapi.org/v2/everything?q=${searchTerm}&from=2024-06-24&sortBy=popularity&pageSize=100&apiKey=${API_KEY}`
       );
       // console.log(response.data);
-      localStorage.setItem("data", JSON.stringify(response.data));
+      localStorage.setItem("favdata", JSON.stringify(response.data));
       const articles = response.data.articles.map((article) => ({
-        title: article.title,
-        image: article.urlToImage,
-        para: article.description,
-        description: article.content,
-        date: new Date(article.publishedAt).toLocaleDateString(),
+        title: article.title || "",
+        image: article.urlToImage || "",
+        para: article.description || "",
+        description: article.content || "",
+        url: article.url || "",
+        date: new Date(article.publishedAt).toLocaleDateString() || "",
       }));
       setCards(articles);
       setLoading(false);
@@ -79,7 +80,7 @@ const Index = () => {
   /// Store data in Firebase
   const storeData = async (articles) => {
     try {
-      const response = await fetch(`${BASE_URL}/newsData.json`, {
+      const response = await fetch(`${BASE_URL}/newsfavData.json`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -98,13 +99,13 @@ const Index = () => {
   // Fetch data from Firebase
   const fetchFirebaseData = async () => {
     try {
-      const response = await fetch(`${BASE_URL}/newsData.json`);
+      const response = await fetch(`${BASE_URL}/newsfavData.json`);
       if (!response.ok) {
         throw new Error("Failed to fetch data from Firebase");
       }
       const data = await response.json();
       const articles = Object.values(data).flatMap((item) => item.articles);
-      localStorage.setItem("data", JSON.stringify(articles));
+      localStorage.setItem("favdata", JSON.stringify(articles));
       setAllCards(articles); // Store all data in state
       setCards(articles); // Initially display all data
       // console.log("from firebase", articles);
@@ -118,12 +119,19 @@ const Index = () => {
 
   // Filter data based on the search term
   const filterData = (searchTerm) => {
-    const filteredArticles = allCards.filter(
-      (article) =>
-        article.title.toLowerCase().includes(searchTerm) ||
-        article.para.toLowerCase().includes(searchTerm) ||
-        article.description.toLowerCase().includes(searchTerm)
-    );
+    const filteredArticles = allCards.filter((article) => {
+      const title = article.title ? article.title.toLowerCase() : "";
+      const para = article.para ? article.para.toLowerCase() : "";
+      const description = article.description
+        ? article.description.toLowerCase()
+        : "";
+
+      return (
+        title.includes(searchTerm) ||
+        para.includes(searchTerm) ||
+        description.includes(searchTerm)
+      );
+    });
     setCards(filteredArticles);
   };
 
@@ -161,7 +169,8 @@ const Index = () => {
                     card.image &&
                     card.para &&
                     card.description &&
-                    card.date
+                    card.date &&
+                    card.url
                 )
                 .map((card, index) => (
                   <Suspense key={index} fallback={<FallbackComponent />}>
@@ -220,8 +229,8 @@ const Index = () => {
           <button
             className={
               theme === "dark"
-                ? "fixed top-20 left-4 text-black py-2 px-2 bg-white rounded-full z-50 hidden sm:flex"
-                : "fixed top-20 left-4 text-white py-2 px-2 bg-gray-400 rounded-full z-50 hidden sm:flex"
+                ? "fixed top-20 left-4 text-black py-2 px-2 bg-white rounded-full z-50"
+                : "fixed top-20 left-4 text-white py-2 px-2 bg-gray-400 rounded-full z-50"
             }
             onClick={() => {
               setIsPopupOpen(true);
@@ -282,4 +291,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default FavNews;

@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { FcGoogle } from "react-icons/fc";
 import { AiFillGithub } from "react-icons/ai";
 import { ThemeContext } from "../Context/ThemeContext";
+import BtmNav from "./BtmNav";
 
 const SignUp = () => {
   const [credentials, setCredentials] = useState("");
@@ -97,6 +98,9 @@ const SignUp = () => {
             </Link>
           </p>
         </div>
+      </div>
+      <div className="fixed bottom-4 right-4">
+        <BtmNav />
       </div>
     </div>
   );

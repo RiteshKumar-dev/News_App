@@ -2,43 +2,83 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { CircularProgress } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
+import BtmNav from "./BtmNav";
 
 const API_KEY = import.meta.env.VITE_REACT_APP_API_KEY;
+const BASE_URL = import.meta.env.VITE_REACT_APP_FIREBASE_BASE_URL;
 
 const Politics = () => {
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `https://newsapi.org/v2/everything?q=politics&from=2024-06-18&sortBy=popularity&apiKey=${API_KEY}`
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        `https://newsapi.org/v2/everything?q=politics&from=2024-06-25&sortBy=popularity&apiKey=${API_KEY}`
+      );
+      const articles = response.data.articles.map((article) => ({
+        title: article.title,
+        image: article.urlToImage,
+        para: article.description,
+        description: article.content,
+        url: article.url,
+        date: new Date(article.publishedAt).toLocaleDateString(),
+      }));
+      setCards(articles);
+      setLoading(false);
+      // storeData(articles);
+    } catch (error) {
+      if (error.response && error.response.status === 426) {
+        setError(
+          "Upgrade required. Please upgrade your plan to access this content."
         );
-        const articles = response.data.articles.map((article) => ({
-          title: article.title,
-          image: article.urlToImage,
-          para: article.description,
-          description: article.content,
-          url: article.url,
-          date: new Date(article.publishedAt).toLocaleDateString(),
-        }));
-        setCards(articles);
-        setLoading(false);
-      } catch (error) {
-        if (error.response && error.response.status === 426) {
-          setError(
-            "Upgrade required. Please upgrade your plan to access this content."
-          );
-        } else {
-          setError("Error fetching data. Please try again later.");
-        }
-        setLoading(false);
+      } else {
+        setError("Error fetching data. Please try again later.");
       }
-    };
-
-    fetchData();
+      setLoading(false);
+    }
+  };
+  // Store data in Firebase
+  const storeData = async (articles) => {
+    try {
+      const response = await fetch(`${BASE_URL}/newsPoliticsData.json`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ articles }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to store data in Firebase");
+      }
+      console.log("Data stored successfully in Firebase");
+      console.log(response);
+    } catch (error) {
+      console.error("Error storing data in Firebase:", error);
+    }
+  };
+  // Fetch data from Firebase
+  const fetchFirebaseData = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/newsPoliticsData.json`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch data from Firebase");
+      }
+      const data = await response.json();
+      const articles = Object.values(data).flatMap((item) => item.articles);
+      localStorage.setItem("Politicsdata", JSON.stringify(articles));
+      setCards(articles);
+      // console.log("from firebase", articles);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching data from Firebase:", error);
+      setError("Error fetching data from Firebase. Please try again later.");
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    // fetchData();
+    fetchFirebaseData();
   }, []);
 
   return (
@@ -65,7 +105,7 @@ const Politics = () => {
             .map((card, index) => (
               <div
                 key={index}
-                className="cursor-pointer bg-white shadow-lg rounded-lg overflow-hidden object-cover hover:shadow-xl transform hover:scale-105 transition-transform duration-200 ease-out"
+                className="cursor-pointer bg-white  rounded-lg overflow-hidden object-cover  transform hover:scale-105 transition-transform duration-200 ease-out"
               >
                 <img
                   src={card.image || "https://via.placeholder.com/300"}
@@ -83,13 +123,13 @@ const Politics = () => {
                   <p className="text-gray-500 mt-2">
                     Published on: {card.date}
                   </p>
-                  <hr className="border-0 h-1 bg-gray-300 rounded-full mt-1 mb-1" />
+                  {/* <hr className="border-0 h-1 bg-gray-300 rounded-full mt-1 mb-1" /> */}
 
                   <Link
                     to={card.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-block bg-red-500 text-white py-2 px-4 rounded-2xl hover:bg-red-600 transition duration-300"
+                    className="mt-2 inline-block bg-red-400 text-white py-2 px-4 rounded-2xl hover:bg-red-500 transition duration-300"
                   >
                     Read more!...
                   </Link>
@@ -98,6 +138,9 @@ const Politics = () => {
             ))}
         </div>
       )}
+      <div className="fixed bottom-4 right-4">
+        <BtmNav />
+      </div>
     </div>
   );
 };

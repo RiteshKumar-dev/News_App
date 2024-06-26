@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import BtmNav from "./BtmNav";
 
 const NotFound_404 = () => {
   return (
@@ -22,6 +23,9 @@ const NotFound_404 = () => {
       >
         Go Home...
       </Link>
+      <div className="fixed bottom-4 right-4">
+        <BtmNav />
+      </div>
     </div>
   );
 };
