@@ -30,7 +30,7 @@ const Articles = () => {
       <img
         src={card.image || "https://via.placeholder.com/300"}
         alt={card.title}
-        className="w-full h-48 object-cover lg:h-auto lg:rounded-lg lg:h-full"
+        className="w-full h-48 object-cover lg:rounded-lg lg:h-full"
       />
       <div className="flex flex-col justify-between p-6">
         <div>
@@ -48,7 +48,7 @@ const Articles = () => {
             >
               Author:
             </span>
-            {card.author}
+            {card.author || "The Times Of India..."}
           </h2>
           <h2
             className={`text-2xl font-bold mb-4 ${
